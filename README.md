@@ -36,7 +36,9 @@ usually when you see a confidence interval out in the wild it's called a
 95% of the means 
 
 ## Randomforest vs ADAboost
-so let's start by using decision trees and random forests to
+https://www.youtube.com/watch?v=LsK-xG1cLYA
+
+So let's start by using decision trees and random forests to
 explain the three main concepts behind adaboost.
 1. Tree size
 RF : Trees has no size limit
@@ -62,3 +64,54 @@ the errors that the first stump makes influence how the second stump is made
 and the error is that the second stone makes influence how the third stump is
 made etc etc etc.
 
+## Adaboost details 
+how to
+create a forest of stumps using adaboost first we'll start with some data we
+create a forest of stumps with adaboost to predict if a patient has heart
+disease. 
+Predictors :  chest_pain, artery_status and weight 
+1] give each sample a weight that indicates how important it is to be correctly classified.
+   at the start all samples get the same weight one divided by the total number of samples in this case that's 1/8 and
+   that makes the samples all equally important.
+
+   however after we make the first stump these weights will change in order to 
+   guide how the next stump is created.
+
+2] calculate gini index of all features. 
+  the first stump in the forest this is done by finding the variable chest pain.
+  blocked arteries or patient weight that does the best job classifying the
+  samples note because all of the weights are the same we can ignore them right
+
+  Now we calculate the Gini index for the three stumps.
+  the Gini index for patient weight is the lowest so this will be the first stump.
+
+3] in the forest now we need to determine how much say this stump will have in the final
+   classification remember some stumps get more say in the final classification than others.
+   we determine how much say a stump has in the final classification based on how well it 
+   classified the samples. 
+   The total error for a stump is the sum  of the weights associated with the incorrectly classified samples.
+   in this case the total error is 1/8 
+   note because all of the sample weights add up to one. 
+   total error will always be between zero for a perfect stump and one for a horrible stump.
+   we use the total error to determine the amount of say this stump has in the final classification with the following
+   formula amount of =  1/2 * log( (1 - total_error)/ total error).
+   
+   we can draw a graph of the amount of say by plugging in a bunch of numbers 
+   between 0 & 1 . when a stump does a good job and the total error is small 
+   then the amount of say is a relatively large positive value. 
+   when a stump is no better than flipping a coin ie total error equals 0.5
+   then the amount of say will be zero and 
+   when a stump does a terrible job and the total error is close to one in other 
+   words if the stump consistently gives you the opposite classification then the 
+   amount of say will be a large negative value so if a stump votes for heart disease 
+   the negative amount of say will turn that vote into not heart disease.
+   
+   **Note if total error is 1 or 0 then this equation will freak out in practice a 
+   small error term is added to prevent this from happening.
+
+	to review the three ideas behind adaboost our one adaboost combines a lot 
+	of weak learners to make classifications the weak learners are almost always 
+	stumps to some stumps get more say in the classification than others and three 
+	each stump is made by taking the previous stumps mistakes into account if we 
+	have a way to Gini function then we use it with the sample weights otherwise 
+	we use the sample weights to make a new dataset that reflects those weights 
