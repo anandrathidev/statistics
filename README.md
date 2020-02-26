@@ -1,5 +1,18 @@
 
 # statistics
+## Odds, probablity and log odds
+Total = 10
+Heads = 8
+Tails = 2
+Odds of head = 8/2
+Odds of tails = 2/8
+prob of head = 8/10
+prob of tails = 2/10
+
+### derive Odds from Probablity 
+Odds of head 8/2 = = prob of head/1- prob of head = (8/10)/(2/10) = 8/2
+Odds of Tail 2/8 = = prob of tail/1- prob of tail = (2/10)/(8/10) = 2/8
+
 ## What is P value 
 p value : https://www.youtube.com/watch?v=5Z9OIYA8He8 : see StatQuest: P Values, clearly explained
 
