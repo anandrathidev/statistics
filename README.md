@@ -94,7 +94,8 @@ Predictors :  chest_pain, artery_status and weight
    note because all of the sample weights add up to one. 
    total error will always be between zero for a perfect stump and one for a horrible stump.
    we use the total error to determine the amount of say this stump has in the final classification with the following
-   formula amount of =  1/2 * log( (1 - total_error)/ total error).
+   formula 
+   ```(Amount of Say) =  1/2 * log( (1 - total_error)/ total error).```
    
    we can draw a graph of the amount of say by plugging in a bunch of numbers 
    between 0 & 1 . when a stump does a good job and the total error is small 
@@ -105,6 +106,11 @@ Predictors :  chest_pain, artery_status and weight
    words if the stump consistently gives you the opposite classification then the 
    amount of say will be a large negative value so if a stump votes for heart disease 
    the negative amount of say will turn that vote into not heart disease.
+   
+   4] After 1st tree/stun calculate new sample weights for each data point 
+   
+   ```sample with wrong class = (e^(Amount of say))/N```
+   ```sample with correct class = (e^-(Amount of say))/N```
    
    **Note if total error is 1 or 0 then this equation will freak out in practice a 
    small error term is added to prevent this from happening.
