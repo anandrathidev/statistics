@@ -1,5 +1,5 @@
 
-# statistics
+#### statistics
 ## Odds, probablity and log odds
 Total = 10
 Heads = 8
