@@ -1,0 +1,170 @@
+# credit https://towardsdatascience.com/exploratory-data-analysis-in-python-c9a77dfa39ce
+# Importing required libraries.
+import pandas as pd
+import numpy as np
+import seaborn as sns #visualisation
+import matplotlib.pyplot as plt #visualisation
+%matplotlib inline 
+sns.set(color_codes=True)
+2. Loading the data into the data frame.
+df = pd.read_csv(“data.csv”)
+# To display the top 5 rows
+df.head(5)
+
+Displaying the top 5 rows.
+# To display the bottom 5 rows
+df.tail(5) 
+
+Displaying the last 10 rows.
+
+3. Checking the types of data
+# Checking the data type
+df.dtypes
+
+Checking the type of data.
+4. Dropping irrelevant columns
+# Dropping irrelevant columns
+df = df.drop([‘Engine Fuel Type’, ‘Market Category’, ‘Vehicle Style’, ‘Popularity’, ‘Number of Doors’, ‘Vehicle Size’], axis=1)
+df.head(5)
+
+Dropping irrelevant columns.
+5. Renaming the columns
+# Renaming the column names
+df = df.rename(columns={“Engine HP”: “HP”, “Engine Cylinders”: “Cylinders”, “Transmission Type”: “Transmission”, “Driven_Wheels”: “Drive Mode”,”highway MPG”: “MPG-H”, “city mpg”: “MPG-C”, “MSRP”: “Price” })
+df.head(5)
+
+Renaming the column name.
+6. Dropping the duplicate rows
+# Total number of rows and columns
+df.shape
+(11914, 10)
+# Rows containing duplicate data
+duplicate_rows_df = df[df.duplicated()]
+print(“number of duplicate rows: “, duplicate_rows_df.shape)
+number of duplicate rows:  (989, 10)
+Now let us remove the duplicate data because it's ok to remove them.
+# Used to count the number of rows before removing the data
+df.count() 
+Make            11914 
+Model           11914 
+Year            11914 
+HP              11845 
+Cylinders       11884 
+Transmission    11914 
+Drive Mode      11914 
+MPG-H           11914 
+MPG-C           11914 
+Price           11914 
+dtype: int64
+So seen above there are 11914 rows and we are removing 989 rows of duplicate data.
+# Dropping the duplicates 
+df = df.drop_duplicates()
+df.head(5)
+
+# Counting the number of rows after removing duplicates.
+df.count()
+Make            10925 
+Model           10925 
+Year            10925 
+HP              10856 
+Cylinders       10895 
+Transmission    10925 
+Drive Mode      10925 
+MPG-H           10925 
+MPG-C           10925 
+Price           10925 
+dtype: int64
+7. Dropping the missing or null values.
+# Finding the null values.
+print(df.isnull().sum())
+Make             0 
+Model            0 
+Year             0 
+HP              69 
+Cylinders       30 
+Transmission     0 
+Drive Mode       0 
+MPG-H            0 
+MPG-C            0 
+Price            0 
+dtype: int64
+This is the reason in the above step while counting both Cylinders and Horsepower (HP) had 10856 and 10895 over 10925 rows.
+# Dropping the missing values.
+df = df.dropna() 
+df.count()
+Make            10827 
+Model           10827 
+Year            10827 
+HP              10827 
+Cylinders       10827 
+Transmission    10827 
+Drive Mode      10827 
+MPG-H           10827 
+MPG-C           10827 
+Price           10827 
+dtype: int64
+Now we have removed all the rows which contain the Null or N/A values (Cylinders and Horsepower (HP)).
+# After dropping the values
+print(df.isnull().sum()) 
+Make            0 
+Model           0 
+Year            0 
+HP              0 
+Cylinders       0 
+Transmission    0 
+Drive Mode      0 
+MPG-H           0 
+MPG-C           0 
+Price           0 
+dtype: int64
+8. Detecting Outliers
+sns.boxplot(x=df[‘Price’])
+
+Box plot of Price
+sns.boxplot(x=df[‘HP’])
+
+Box Plot of HP
+sns.boxplot(x=df['Cylinders'])
+
+Box Plot of Cylinders
+Q1 = df.quantile(0.25)
+Q3 = df.quantile(0.75)
+IQR = Q3 — Q1
+print(IQR)
+Year             9.0 
+HP             130.0 
+Cylinders        2.0 
+MPG-H            8.0 
+MPG-C            6.0 
+Price        21327.5 
+dtype: float64
+Don’t worry about the above values because it’s not important to know each and every one of them because it's just important to know how to use this technique in order to remove the outliers.
+df = df[~((df < (Q1–1.5 * IQR)) |(df > (Q3 + 1.5 * IQR))).any(axis=1)]
+df.shape
+(9191, 10)
+As seen above there were around 1600 rows were outliers. But you cannot completely remove the outliers because even after you use the above technique there maybe 1–2 outlier unremoved but that ok because there were more than 100 outliers. Something is better than nothing.
+9. Plot different features against one another (scatter), against frequency (histogram)
+Histogram
+# Plotting a Histogram
+df.Make.value_counts().nlargest(40).plot(kind=’bar’, figsize=(10,5))
+plt.title(“Number of cars by make”)
+plt.ylabel(‘Number of cars’)
+plt.xlabel(‘Make’);
+
+Histogram
+Heat Maps
+# Finding the relations between the variables.
+plt.figure(figsize=(20,10))
+c= df.corr()
+sns.heatmap(c,cmap=”BrBG”,annot=True)
+c
+
+Heat Maps.
+Scatterplot
+# Plotting a scatter plot
+fig, ax = plt.subplots(figsize=(10,6))
+ax.scatter(df[‘HP’], df[‘Price’])
+ax.set_xlabel(‘HP’)
+ax.set_ylabel(‘Price’)
+plt.show()
+
